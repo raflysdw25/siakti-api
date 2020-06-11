@@ -18,12 +18,22 @@ class Model_mahasiswa extends CI_Model {
 	// for the result, this is a simple request you can improve by your self to make a any response
 
 
-	public function getMahasiswa($nim='')
+	public function getMahasiswa($nim = '')
 	{
-		if ($nim) {
+		if ($nim != null) {
 			$this->db->where('nim', $nim);
 		}
 
+		$this->db->select('*');
+		$this->db->from($this->table_1);
+
+		$data = $this->db->get();
+		return $data->result();
+	}
+
+	public function kartuMahasiswa($no_ktm)
+	{
+		$this->db->where('no_ktm', $no_ktm);
 		$this->db->select('*');
 		$this->db->from($this->table_1);
 

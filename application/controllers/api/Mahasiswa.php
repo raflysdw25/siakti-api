@@ -36,14 +36,38 @@ class Mahasiswa extends REST_Controller {
 			$responseData = $data;
 		}
 		
-		$response = resultJson( $responseCode, $responseDesc, $responseData);
+		$response = resultJson($responseCode, $responseDesc, $responseData);
 
 		$this->response($response, 200);
-	}
+    }
+    
+    public function kartuMahasiswa_get()
+    {
+        $no_ktm = $this->get('no_ktm');
+
+        if($no_ktm){
+            $data = $this->mm->kartuMahasiswa($no_ktm);
+			if($data){
+                $responseCode = "200";
+                $responseDesc = "Success get a mahasiswa";
+			    $responseData = $data;
+            }else{
+                $responseCode = "204";
+                $responseDesc = "Data not Found";
+                $responseData = null;
+            }
+        }
+		
+		$response = resultJson($responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+    }
 
 
 	public function index_post()
-	{		
+	{	
+        $no_ktm = ($this->post('no_ktm') !== null)?  $this->post('no_ktm') : null; 
+        
         $insertData = array(
             'nim' => $this->post('nim'),
             'nama_mhs' => $this->post('nama_mhs'),
@@ -61,7 +85,7 @@ class Mahasiswa extends REST_Controller {
             'kel_ibu' => $this->post('kel_ibu'),
             'kec_ibu' => $this->post('kec_ibu'),
             'kota_ibu' => $this->post('kota_ibu'),
-            'no_ktm' => $this->post('no_ktm'),
+            'no_ktm' => $no_ktm,
             'tlp_mhs' => $this->post('tlp_mhs'),
             'tlp_bpk' => $this->post('tlp_bpk'),
             'tlp_ibu' => $this->post('tlp_ibu'),
@@ -178,5 +202,29 @@ class Mahasiswa extends REST_Controller {
 
 		$this->response($response, 200);
 
-	}
+    }
+    
+    public function updateKartu_put()
+    {
+        $nim = $this->put('nim');
+
+        $updateData = array(				 
+            'no_ktm' => $this->put('no_ktm')            
+        );
+
+        $query = $this->mm->updateMahasiswa($nim, $updateData);
+
+        if ($query) {
+            $responseCode = "00";
+            $responseDesc = "Success to update kartu user";
+        }
+        else{
+            $responseCode = "01";
+            $responseDesc = "Failed to update kartu user";
+        }
+		
+		$response = resultJson( $responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+    }
 }
