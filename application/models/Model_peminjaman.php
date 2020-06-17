@@ -21,16 +21,12 @@ class Model_peminjaman extends CI_Model {
 	public function getPeminjaman($kd_pjm='')
 	{
 		// Memanggil table user
-        $this->db->select($this->table_1.".*, tik.barang.nama_brg, tik.staff.nama as nama_staff , tik.mahasiswa.nama_mhs as nama_mahasiswa"); //Select digunakan untuk menspesifik nama yang ditampilkan di dalam database
-        $this->db->from($this->table_1);
-        $this->db->join("tik.barang",  "tik.barang.kode_brg = ". $this->table_1.".barang_kode_brg");
-		$this->db->join("tik.mahasiswa", "tik.mahasiswa.nim = ". $this->table_1.".mahasiswa_nim");
-		$this->db->join("tik.staff", "tik.staff.nip = ". $this->table_1.".staff_nip");
-
-		if ($kd_pjm) {
+        if ($kd_pjm) {
 			$this->db->where('kd_pjm', $kd_pjm);
 		}
 
+		$this->db->select('*');
+		$this->db->from($this->table_1);
 
 		$data = $this->db->get();
 		return $data->result();

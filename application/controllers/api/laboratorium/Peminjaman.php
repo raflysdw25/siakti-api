@@ -18,7 +18,7 @@ class Peminjaman extends REST_Controller {
 	{
 		$kd_pjm = $this->get('kd_pjm');
 
-		if($kd_pjm){
+		if($kd_pjm != null){
             $data = $this->mp->getPeminjaman($kd_pjm);
             if($data){
                 $responseCode = "200";
@@ -43,17 +43,24 @@ class Peminjaman extends REST_Controller {
 		$this->response($response, 200);
 	}
 
-
+	// Digunakan untuk membuat data peminjaman dahulu, agar user bisa memasukkan barang yang dipinjam.
 	public function index_post()
-	{		    
+	{	
+		// Null Check		
+		$mahasiswa_nim = ($this->post('mahasiswa_nim') !== null) ?  $this->post('mahasiswa_nim') : null;		
+        $staff_nip = ($this->post('staff_nip') !== null) ?  $this->post('staff_nip') : null;
+		$tgl_pjm = ($this->post('tgl_pjm') !== null)?  $this->post('tgl_pjm') : null;
+		$tgl_blk = ($this->post('tgl_blk') !== null)?  $this->post('tgl_blk') : null;
+		$tgl_blk_real = ($this->post('tgl_blk_real') !== null)?  $this->post('tgl_blk_real') : null;		
+		
 		$insertData = array(
 			'kd_pjm' => $this->post('kd_pjm'),
-			'tgl_pjm' => $this->post('tgl_pjm'),
-			'tgl_blk' => $this->post('tgl_blk'),
-			'tgl_blk_real' => $this->post('tgl_blk_real'),
-			'mahasiswa_nim' => $this->post('mahasiswa_nim'),
-			'staff_nip' => $this->post('staff_nip'),
-			'barang_kode_brg' => $this->post('barang_kode_brg')
+			'tgl_pjm' => $tgl_pjm,
+			'tgl_blk' => $tgl_blk,
+			'tgl_blk_real' => $tgl_blk_real,
+			'mahasiswa_nim' => $mahasiswa_nim,
+			'staff_nip' => $staff_nip,
+			'status' => "PENDING"
 		);
 
 		$query = $this->mp->insertPeminjaman($insertData);
@@ -73,29 +80,74 @@ class Peminjaman extends REST_Controller {
 
 		$this->response($response, 200);
     }
-    
-    function is_unique(){
-        $post = $this->post(null,TRUE);
-        $query = $this->db->query("SELECT * FROM tik.peminjaman WHERE kd_pjm = '$post[kd_pjm]'");
-        if($query->num_rows() > 0){
-            $this->form_validation->set_message('is_unique', '{field} ini sudah dipakai, silahkan ganti' );
-            return FALSE;
-        }else{
-            return TRUE;
-        }
-	}
-
+	
+	// digunakan ketika proses peminjaman telah selesai.
 	public function index_put()
 	{
 		$kd_pjm = $this->put('kd_pjm');
+
+		// Null Check
+		$mahasiswa_nim = ($this->put('mahasiswa_nim') !== null) ?  $this->put('mahasiswa_nim') : null;		
+        $staff_nip = ($this->put('staff_nip') !== null) ?  $this->put('staff_nip') : null;		
+		$tgl_blk_real = ($this->put('tgl_blk_real') !== null)?  $this->put('tgl_blk_real') : null;		
 		
 		$updateData = array(				
 			'tgl_pjm' => $this->put('tgl_pjm'),
 			'tgl_blk' => $this->put('tgl_blk'),
+			'tgl_blk_real' => $tgl_blk_real,
+			'mahasiswa_nim' => $mahasiswa_nim,
+			'staff_nip' => $staff_nip,
+			'status' => "SUCCESS"
+		);
+
+		$query = $this->mp->updatePeminjaman($kd_pjm, $updateData);
+
+		if ($query) {
+			$responseCode = "00";
+			$responseDesc = "Success to update peminjaman";
+			$responseData = $updateData;
+		}
+		else{
+			$responseCode = "01";
+			$responseDesc = "Failed to update peminjaman";
+		}
+		$response = resultJson( $responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+	}
+
+	public function updateKembali_put(){
+		$kd_pjm = $this->put('kd_pjm');
+						
+		
+		$updateData = array(				
 			'tgl_blk_real' => $this->put('tgl_blk_real'),
-			'mahasiswa_nim' => $this->put('mahasiswa_nim'),
-			'staff_nip' => $this->put('staff_nip'),
-			'barang_kode_brg' => $this->put('barang_kode_brg')
+			'status' => "FINISH"
+		);
+
+		$query = $this->mp->updatePeminjaman($kd_pjm, $updateData);
+
+		if ($query) {
+			$responseCode = "00";
+			$responseDesc = "Success to update pengembalian peminjaman";
+			$responseData = $updateData;
+		}
+		else{
+			$responseCode = "01";
+			$responseDesc = "Failed to update pengembalian peminjaman";
+		}
+		$response = resultJson( $responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+	}
+
+	// Untuk update status proses peminjaman dari pending menjadi success
+	public function updateStatus_put(){
+		$kd_pjm = $this->put('kd_pjm');
+				
+		
+		$updateData = array(							
+			'status' => $this->put('status')
 		);
 
 		$query = $this->mp->updatePeminjaman($kd_pjm, $updateData);
@@ -112,11 +164,8 @@ class Peminjaman extends REST_Controller {
 
 		$this->response($response, 200);
 	}
-
-	public function updateKembali(){
-		
-	}
 	
+	// Digunakan untuk menghapus peminjaman ketika tidak jadi melakukan peminjaman
 	public function index_delete()
 	{
 		$kd_pjm = $this->delete('kd_pjm');

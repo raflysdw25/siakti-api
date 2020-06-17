@@ -16,10 +16,10 @@ class Supplier extends REST_Controller {
 
 	public function index_get()
 	{
-		$nama_supp = $this->get('nama_supp');
+		$id_supp = $this->get('id_supp');
 
-		if($nama_supp){
-			$data = $this->ms->getSupplier($nama_supp);
+		if($id_supp){
+			$data = $this->ms->getSupplier($id_supp);
 			if($data){
                 $responseCode = "200";
                 $responseDesc = "Success get a supplier";
@@ -41,6 +41,23 @@ class Supplier extends REST_Controller {
 		$this->response($response, 200);
 	}
 
+	public function maxId_get()
+	{
+		$data = $this->ms->getMaxId();
+		if($data){
+			$responseCode = "200";
+			$responseDesc = "Success get a supplier";
+			$responseData = $data;
+		}else{
+			$responseCode = "204";
+			$responseDesc = "Data not Found";
+			$responseData = null;
+		}
+		$response = resultJson( $responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+	}
+
 
 	public function index_post()
 	{
@@ -51,6 +68,7 @@ class Supplier extends REST_Controller {
 		
 
 		$insertData = array(
+			'id_supp' => $this->post('id_supp'),
 			'nama_supp' => $this->post('nama_supp'),
 			'alamat' => $this->post('alamat'),
 			'tlpn' => $this->post('tlpn'),
@@ -75,30 +93,20 @@ class Supplier extends REST_Controller {
 
 		$this->response($response, 200);
     }
-    
-    function is_unique(){
-        $post = $this->post(null,TRUE);
-        $query = $this->db->query("SELECT * FROM tik.supplier WHERE nama_supp = '$post[nama_supp]'");
-        if($query->num_rows() > 0){
-            $this->form_validation->set_message('is_unique', '{field} ini sudah dipakai, silahkan ganti' );
-            return FALSE;
-        }else{
-            return TRUE;
-        }
-	}
 
 	public function index_put()
 	{
-		$nama_supp = $this->put('nama_supp');
+		$id_supp = $this->put('id_supp');
 
-		$updateData = array(			
+		$updateData = array(						
+			'nama_supp' => $this->put('nama_supp'),
 			'alamat' => $this->put('alamat'),
 			'tlpn' => $this->put('tlpn'),
 			'email' => $this->put('email'),
 			'pic' => $this->put('pic')
 		);
 
-		$query = $this->ms->updateSupplier($nama_supp, $updateData);
+		$query = $this->ms->updateSupplier($id_supp, $updateData);
 
 		if ($query) {
 			$responseCode = "00";
@@ -117,8 +125,8 @@ class Supplier extends REST_Controller {
 	
 	public function index_delete()
 	{
-		$nama_supp = $this->delete('nama_supp');
-		$query = $this->ms->deleteSupplier($nama_supp);
+		$id_supp = $this->delete('id_supp');
+		$query = $this->ms->deleteSupplier($id_supp);
 
 		if ($query) {
 			$responseCode = "00";

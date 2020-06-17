@@ -31,6 +31,15 @@ class Model_barang extends CI_Model {
 		return $data->result();
 	}
 
+	public function getMaxId()
+	{
+		$this->db->select('max(kode_brg)');
+		$this->db->from($this->table_1);
+
+		$data = $this->db->get();
+		return $data->result();
+	}
+
 	public function insertBarang($data='')
 	{
 		$query = $this->db->insert($this->table_1, $data);

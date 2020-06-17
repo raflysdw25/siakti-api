@@ -44,6 +44,9 @@ class Staff extends REST_Controller {
 
 	public function index_post()
 	{    
+        $usr_name = ($this->post('usr_name') !== null) ? $this->post('usr_name'): '';
+        $password = ($this->post('password') !== null) ? $this->post('password'): '';
+
         $insertData = array(
             'nip' => $this->post('nip'),
             'nama' => $this->post('nama'),
@@ -53,8 +56,8 @@ class Staff extends REST_Controller {
             'kota_staff' => $this->post('kota_staff'),
             'tlp_staff' => $this->post('tlp_staff'),
             'email_staff' => $this->post('email_staff'),
-            'usr_name' => $this->post('usr_name'),
-            'password' => $this->post('password'),
+            'usr_name' => $usr_name,
+            'password' => $password,
             'prodi_prodi_id' => $this->post('prodi_prodi_id')			
         );
 
@@ -76,20 +79,14 @@ class Staff extends REST_Controller {
 		$this->response($response, 200);
     }
     
-    // function is_unique(){
-    //     $post = $this->post(null,TRUE);
-    //     $query = $this->db->query("SELECT * FROM tik.staff WHERE nip = '$post[nip]'");
-    //     if($query->num_rows() > 0){
-    //         $this->form_validation->set_message('is_unique', '{field} ini sudah dipakai, silahkan ganti' );
-    //         return FALSE;
-    //     }else{
-    //         return TRUE;
-    //     }
-	// }
 
 	public function index_put()
 	{
-		$nip = $this->put('nip');
+        $nip = $this->put('nip');
+        
+        // Null check
+        $usr_name = ($this->put('usr_name') !== null) ? $this->put('usr_name'): null;
+        $password = ($this->put('password') !== null) ? $this->put('password'): null;
 
         $updateData = array(				
             'nama' => $this->put('nama'),
@@ -99,8 +96,8 @@ class Staff extends REST_Controller {
             'kota_staff' => $this->put('kota_staff'),
             'tlp_staff' => $this->put('tlp_staff'),
             'email_staff' => $this->put('email_staff'),
-            'usr_name' => $this->put('usr_name'),
-            'password' => $this->put('password'),
+            'usr_name' => $usr_name,
+            'password' => $password,
             'prodi_prodi_id' => $this->put('prodi_prodi_id')
         );
 
@@ -118,7 +115,32 @@ class Staff extends REST_Controller {
 		$response = resultJson( $responseCode, $responseDesc, $responseData);
 
 		$this->response($response, 200);
-	}
+    }
+    
+    public function updateAccount_put()
+    {
+        $nim = $this->put('nim');
+
+        $updateData = array(				 
+            'usr_name' => $this->put('usr_name'),
+            'password' => $this->put('password')                        
+        );
+
+        $query = $this->mm->updateMahasiswa($nim, $updateData);
+
+        if ($query) {
+            $responseCode = "00";
+            $responseDesc = "Success to update kartu user";
+        }
+        else{
+            $responseCode = "01";
+            $responseDesc = "Failed to update kartu user";
+        }
+        
+        $response = resultJson( $responseCode, $responseDesc, $responseData);
+
+        $this->response($response, 200);
+    }
 	
 	public function index_delete()
 	{

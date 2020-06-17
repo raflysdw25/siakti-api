@@ -66,7 +66,9 @@ class Mahasiswa extends REST_Controller {
 
 	public function index_post()
 	{	
-        $no_ktm = ($this->post('no_ktm') !== null)?  $this->post('no_ktm') : null; 
+        $no_ktm = ($this->post('no_ktm') !== null)?  $this->post('no_ktm') : null;
+        $usr_name = ($this->post('usr_name') !== null) ? $this->post('usr_name'): null;
+        $password = ($this->post('password') !== null) ? $this->post('password'): null;
         
         $insertData = array(
             'nim' => $this->post('nim'),
@@ -95,8 +97,8 @@ class Mahasiswa extends REST_Controller {
             'email_mhs' => $this->post('email_mhs'),
             'email_ortu' => $this->post('email_ortu'),
             'thn_akad_thn_akad_id' => $this->post('thn_akad_thn_akad_id'),
-            'usr_name' => $this->post('usr_name'),
-            'password' => $this->post('password'),
+            'usr_name' => $usr_name,
+            'password' => $password,
             'prodi_prodi_id' => $this->post('prodi_prodi_id')			
         );
 
@@ -118,20 +120,12 @@ class Mahasiswa extends REST_Controller {
 		$this->response($response, 200);
     }
     
-    // function is_unique(){
-    //     $post = $this->post(null,TRUE);
-    //     $query = $this->db->query("SELECT * FROM tik.mahasiswa WHERE nim = '$post[nim]'");
-    //     if($query->num_rows() > 0){
-    //         $this->form_validation->set_message('is_unique', '{field} ini sudah dipakai, silahkan ganti' );
-    //         return FALSE;
-    //     }else{
-    //         return TRUE;
-    //     }
-	// }
-
 	public function index_put()
 	{
-		$nim = $this->put('nim');
+        $nim = $this->put('nim');
+        $no_ktm = ($this->put('no_ktm') !== null)?  $this->put('no_ktm') : null;
+        $usr_name = ($this->put('usr_name') !== null) ? $this->put('usr_name'): null;
+        $password = ($this->put('password') !== null) ? $this->put('password'): null;
 
         $updateData = array(				
             'nama_mhs' => $this->put('nama_mhs'),
@@ -149,7 +143,7 @@ class Mahasiswa extends REST_Controller {
             'kel_ibu' => $this->put('kel_ibu'),
             'kec_ibu' => $this->put('kec_ibu'),
             'kota_ibu' => $this->put('kota_ibu'),
-            'no_ktm' => $this->put('no_ktm'),
+            'no_ktm' => $no_ktm,
             'tlp_mhs' => $this->put('tlp_mhs'),
             'tlp_bpk' => $this->put('tlp_bpk'),
             'tlp_ibu' => $this->put('tlp_ibu'),
@@ -159,8 +153,8 @@ class Mahasiswa extends REST_Controller {
             'email_mhs' => $this->put('email_mhs'),
             'email_ortu' => $this->put('email_ortu'),
             'thn_akad_thn_akad_id' => $this->put('thn_akad_thn_akad_id'),
-            'usr_name' => $this->put('usr_name'),
-            'password' => $this->put('password'),
+            'usr_name' => $usr_name,
+            'password' => $password,
             'prodi_prodi_id' => $this->put('prodi_prodi_id')
         );
 
@@ -180,6 +174,55 @@ class Mahasiswa extends REST_Controller {
 		$this->response($response, 200);
 	}
 	
+    public function updateKartu_put()
+    {
+        $nim = $this->put('nim');
+
+        $updateData = array(				 
+            'no_ktm' => $this->put('no_ktm')            
+        );
+
+        $query = $this->mm->updateMahasiswa($nim, $updateData);
+
+        if ($query) {
+            $responseCode = "00";
+            $responseDesc = "Success to update kartu user";
+        }
+        else{
+            $responseCode = "01";
+            $responseDesc = "Failed to update kartu user";
+        }
+        
+        $response = resultJson( $responseCode, $responseDesc, $responseData);
+
+        $this->response($response, 200);
+    }
+
+    public function updateAccount_put()
+    {
+        $nim = $this->put('nim');
+
+        $updateData = array(				 
+            'usr_name' => $this->put('usr_name'),
+            'password' => $this->put('password')                        
+        );
+
+        $query = $this->mm->updateMahasiswa($nim, $updateData);
+
+        if ($query) {
+            $responseCode = "00";
+            $responseDesc = "Success to update kartu user";
+        }
+        else{
+            $responseCode = "01";
+            $responseDesc = "Failed to update kartu user";
+        }
+        
+        $response = resultJson( $responseCode, $responseDesc, $responseData);
+
+        $this->response($response, 200);
+    }
+
 	public function index_delete()
 	{
 		$nim = $this->delete('nim');
@@ -204,27 +247,4 @@ class Mahasiswa extends REST_Controller {
 
     }
     
-    public function updateKartu_put()
-    {
-        $nim = $this->put('nim');
-
-        $updateData = array(				 
-            'no_ktm' => $this->put('no_ktm')            
-        );
-
-        $query = $this->mm->updateMahasiswa($nim, $updateData);
-
-        if ($query) {
-            $responseCode = "00";
-            $responseDesc = "Success to update kartu user";
-        }
-        else{
-            $responseCode = "01";
-            $responseDesc = "Failed to update kartu user";
-        }
-		
-		$response = resultJson( $responseCode, $responseDesc, $responseData);
-
-		$this->response($response, 200);
-    }
 }
