@@ -20,7 +20,7 @@ class Staff extends REST_Controller {
 
 		if($nip){
 			$data = $this->ms->getStaff($nip);
-			if($data){
+			if($data !== null){
                 $responseCode = "200";
                 $responseDesc = "Success get a staff";
 			    $responseData = $data;
@@ -39,7 +39,31 @@ class Staff extends REST_Controller {
 		$response = resultJson( $responseCode, $responseDesc, $responseData);
 
 		$this->response($response, 200);
-	}
+    }
+    
+    public function access_post()
+    {
+        $usr_name = $this->post('usr_name');
+        $password = $this->post('password');
+        
+
+        $access = $this->ms->getAccessStaff($usr_name,$password);
+
+        if($access){
+            $responseCode = "200";
+			$responseDesc = "Success get staff access";
+			$responseData = $access;
+        }else{
+            $responseCode = "204";
+            $responseDesc = "Data not Found";
+            $responseData = null;
+        }
+
+        $response = resultJson( $responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+
+    }
 
 
 	public function index_post()
