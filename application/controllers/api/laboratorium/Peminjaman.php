@@ -79,7 +79,24 @@ class Peminjaman extends REST_Controller {
 		$response = resultJson( $responseCode, $responseDesc, $responseData);
 
 		$this->response($response, 200);
-    }
+	}
+	
+	public function maxId_get()
+	{
+		$data = $this->mp->getMaxId();
+		if($data){
+			$responseCode = "200";
+			$responseDesc = "Success get a peminjam";
+			$responseData = $data;
+		}else{
+			$responseCode = "204";
+			$responseDesc = "Data not Found";
+			$responseData = null;
+		}
+		$response = resultJson( $responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+	}
 	
 	// digunakan ketika proses peminjaman telah selesai.
 	public function index_put()

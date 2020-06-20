@@ -70,7 +70,8 @@ class PeminjamanDetail extends REST_Controller {
 		$insertData = array(
 			'id_detail' => $this->post('id_detail'),
 			'pinjambrg_kd_pjm' => $this->post('pinjambrg_kd_pjm'),
-			'barang_kode_brg' => $this->post('barang_kode_brg')
+			'barang_kode_brg' => $this->post('barang_kode_brg'),
+			'jumlah' => $this->post('jumlah')
 		);
 
 		$query = $this->mpd->insertPeminjamanDetail($insertData);
@@ -101,8 +102,9 @@ class PeminjamanDetail extends REST_Controller {
 		
 		$updateData = array(				
 			'id_detail' => $this->put('id_detail'),
-			'pinjambrg_kd_pjm' => $this->put('pinjambrg_kd_pjm'),			
-			'barang_kode_brg' => $this->put('barang_kode_brg')
+			'pinjambrg_kd_pjm' => $this->put('pinjambrg_kd_pjm'),		
+			'barang_kode_brg' => $this->put('barang_kode_brg'),
+			'jumlah' => $this->put('jumlah')
 		);
 
 		$query = $this->mpd->updatePeminjamanDetail($id_detail, $updateData);

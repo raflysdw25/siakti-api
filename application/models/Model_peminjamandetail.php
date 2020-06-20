@@ -6,6 +6,7 @@ class Model_peminjamandetail extends CI_Model {
 
 	// please use $table_number = table name 
 	private $table_1 = 'tik.pinjambrg_detail';
+	private $table_2 = 'tik.barang';
 
 
 
@@ -22,8 +23,9 @@ class Model_peminjamandetail extends CI_Model {
 	{		
 		$this->db->where('pinjambrg_kd_pjm', $pinjambrg_kd_pjm);
 
-		$this->db->select('*');
+		$this->db->select($this->table_1.'.*,'.$this->table_2.'.nama_brg as nama_brg');
 		$this->db->from($this->table_1);
+		$this->db->join($this->table_2,$this->table_1.'.barang_kode_brg = '.$this->table_2.'.kode_brg');
 
 		$data = $this->db->get();
 		return $data->result();
@@ -36,8 +38,9 @@ class Model_peminjamandetail extends CI_Model {
 			$this->db->where('id_detail', $id_detail);
 		}
 
-		$this->db->select('*');
+		$this->db->select($this->table_1.'.*,'.$this->table_2.'.nama_brg as nama_brg');
 		$this->db->from($this->table_1);
+		$this->db->join($this->table_2,$this->table_1.'.barang_kode_brg = '.$this->table_2.'.kode_brg');
 
 		$data = $this->db->get();
 		return $data->result();
