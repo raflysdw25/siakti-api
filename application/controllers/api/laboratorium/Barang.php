@@ -96,7 +96,7 @@ class Barang extends REST_Controller {
 	{			
 		$kode_brg = $this->put('kode_brg');
 
-		$supplier_id_supp = ($this->put('supplier_id_supp') == null)? '':$this->put('supplier_id_supp');
+		$supplier_id_supp = ($this->put('supplier_id_supp') !== null)? $this->put('supplier_id_supp') : null;
 		
 		$updateData = array(			
 			'nama_brg' => $this->put('nama_brg'),
