@@ -6,6 +6,7 @@ class Model_barang extends CI_Model {
 
 	// please use $table_number = table name 
 	private $table_1 = 'tik.barang';
+	private $table_2 = 'tik.supplier';
 
 
 
@@ -24,8 +25,9 @@ class Model_barang extends CI_Model {
 			$this->db->where('kode_brg', $kode_brg);
 		}
 
-		$this->db->select('*');
+		$this->db->select($this->table_1.'.*,'. $this->table_2.'.nama_supp as nama_supp');
 		$this->db->from($this->table_1);
+		$this->db->join($this->table_2,$this->table_1.'.supplier_id_supp = '. $this->table_2.'.id_supp', 'left');
 
 		$data = $this->db->get();
 		return $data->result();

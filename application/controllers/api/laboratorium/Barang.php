@@ -55,18 +55,23 @@ class Barang extends REST_Controller {
 
 	public function index_post()
 	{
+		$supplier_id_supp = ($this->post('supplier_id_supp') !== null) ? $this->post('supplier_id_supp') : null;
+		$satuan = ($this->post('satuan') !== null) ? $this->post('satuan') : null;
+		$jumlah = ($this->post('jumlah') !== null) ? $this->post('jumlah') : null;
 
-		// STATUS : TERSEDIA, DIGUNAKAN, RUSAK
+		// STATUS : TERSEDIA, DIGUNAKAN, RUSAK, HABIS
 		$insertData = array(
 			'kode_brg' => $this->post('kode_brg'),
 			'nama_brg' => $this->post('nama_brg'),
 			'jenis' => $this->post('jenis'),
 			'spesifikasi' => $this->post('spesifikasi'),
 			'status' => "TERSEDIA",
+			'jumlah' => $jumlah,
+			'satuan' => $satuan,
 			'barcode' => $this->post('barcode'),
 			'thn_pengadaan' => $this->post('thn_pengadaan'),
 			'asal_pengadaan' => $this->post('asal_pengadaan'),
-			'supplier_id_supp' => $this->post('supplier_id_supp')
+			'supplier_id_supp' => $supplier_id_supp
 		);
 
 		$query = $this->mb->insertBarang($insertData);
@@ -91,16 +96,21 @@ class Barang extends REST_Controller {
 	public function index_put()
 	{			
 		$kode_brg = $this->put('kode_brg');
+		$supplier_id_supp = ($this->put('supplier_id_supp') !== null) ? $this->put('supplier_id_supp') : null;
+		$satuan = ($this->put('satuan') !== null) ? $this->put('satuan') : '';
+		$jumlah = ($this->put('jumlah') !== null) ? $this->put('jumlah') : null;
 		
 		$updateData = array(			
 			'nama_brg' => $this->put('nama_brg'),
 			'jenis' => $this->put('jenis'),
 			'spesifikasi' => $this->put('spesifikasi'),
 			'status' => $this->put('status'),
+			'jumlah' => $jumlah,
+			'satuan' => $satuan,
 			'barcode' => $this->put('barcode'),
 			'thn_pengadaan' => $this->put('thn_pengadaan'),
 			'asal_pengadaan' => $this->put('asal_pengadaan'),
-			'supplier_id_supp' => $this->put('supplier_id_supp')
+			'supplier_id_supp' => $supplier_id_supp
 		);
 
 		$query = $this->mb->updateBarang($kode_brg, $updateData);
@@ -121,7 +131,7 @@ class Barang extends REST_Controller {
 		$this->response($response, 200);
 	}
 
-	// Untuk mengganti status BARANG dari TERSEDIA,DIGUNAKAN, RUSAK
+	// Untuk mengganti status BARANG dari TERSEDIA,DIGUNAKAN, RUSAK, HABIS
 	public function updateStatus_put()
 	{
 		$kode_brg = $this->put('kode_brg');		

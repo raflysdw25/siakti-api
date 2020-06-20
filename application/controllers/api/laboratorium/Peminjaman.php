@@ -43,12 +43,32 @@ class Peminjaman extends REST_Controller {
 		$this->response($response, 200);
 	}
 
+	public function maxId_get()
+	{
+		$data = $this->mp->getMaxId();
+		if($data){
+			$responseCode = "200";
+			$responseDesc = "Success get a peminjaman";
+			$responseData = $data;
+		}else{
+			$responseCode = "204";
+			$responseDesc = "Data not Found";
+			$responseData = null;
+		}
+		$response = resultJson( $responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+	}
+
 	// Digunakan untuk membuat data peminjaman dahulu, agar user bisa memasukkan barang yang dipinjam.
 	public function index_post()
 	{	
 		// Null Check		
 		$mahasiswa_nim = ($this->post('mahasiswa_nim') !== null) ?  $this->post('mahasiswa_nim') : null;		
-        $staff_nip = ($this->post('staff_nip') !== null) ?  $this->post('staff_nip') : null;
+		$keperluan = ($this->post('keperluan') !== null) ?  $this->post('keperluan') : null;		
+		$staff_nip = ($this->post('staff_nip') !== null) ?  $this->post('staff_nip') : null;
+		$staff_penanggungjawab = ($this->post('staff_penanggungjawab') !== null) ?  $this->post('staff_penanggungjawab') : null;
+		$ruangan_idruangan = ($this->post('ruangan_idruangan') !== null) ?  $this->post('ruangan_idruangan') : null;
 		$tgl_pjm = ($this->post('tgl_pjm') !== null)?  $this->post('tgl_pjm') : null;
 		$tgl_blk = ($this->post('tgl_blk') !== null)?  $this->post('tgl_blk') : null;
 		$tgl_blk_real = ($this->post('tgl_blk_real') !== null)?  $this->post('tgl_blk_real') : null;		
@@ -58,8 +78,11 @@ class Peminjaman extends REST_Controller {
 			'tgl_pjm' => $tgl_pjm,
 			'tgl_blk' => $tgl_blk,
 			'tgl_blk_real' => $tgl_blk_real,
+			'keperluan' => $keperluan,
 			'mahasiswa_nim' => $mahasiswa_nim,
 			'staff_nip' => $staff_nip,
+			'staff_penanggungjawab' => $staff_penanggungjawab,
+			'ruangan_idruangan' => $ruangan_idruangan,
 			'status' => "PENDING"
 		);
 
@@ -87,16 +110,21 @@ class Peminjaman extends REST_Controller {
 		$kd_pjm = $this->put('kd_pjm');
 
 		// Null Check
+		$staff_penanggungjawab = ($this->put('staff_penanggungjawab') !== null) ?  $this->put('staff_penanggungjawab') : null;		
 		$mahasiswa_nim = ($this->put('mahasiswa_nim') !== null) ?  $this->put('mahasiswa_nim') : null;		
         $staff_nip = ($this->put('staff_nip') !== null) ?  $this->put('staff_nip') : null;		
 		$tgl_blk_real = ($this->put('tgl_blk_real') !== null)?  $this->put('tgl_blk_real') : null;		
+		$ruangan_idruangan = ($this->put('ruangan_idruangan') !== null) ?  $this->put('ruangan_idruangan') : null;
 		
 		$updateData = array(				
 			'tgl_pjm' => $this->put('tgl_pjm'),
 			'tgl_blk' => $this->put('tgl_blk'),
+			'keperluan' => $this->put('keperluan'),
 			'tgl_blk_real' => $tgl_blk_real,
 			'mahasiswa_nim' => $mahasiswa_nim,
 			'staff_nip' => $staff_nip,
+			'staff_penanggungjawab' => $staff_penanggungjawab,
+			'ruangan_idruangan' => $ruangan_idruangan,
 			'status' => "SUCCESS"
 		);
 
