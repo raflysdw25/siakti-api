@@ -32,15 +32,6 @@ class Model_peminjaman extends CI_Model {
 		return $data->result();
 	}
 
-	public function getMaxId()
-	{
-		$this->db->select('max(kd_pjm)');
-		$this->db->from($this->table_1);
-
-		$data = $this->db->get();
-		return $data->result();
-	}
-
 	public function insertPeminjaman($data='')
 	{
 		$query = $this->db->insert($this->table_1, $data);

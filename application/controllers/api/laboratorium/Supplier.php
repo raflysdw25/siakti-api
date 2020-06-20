@@ -62,6 +62,11 @@ class Supplier extends REST_Controller {
 	public function index_post()
 	{
 
+		$post = $this->post();
+        
+		$responseData = null;
+		
+
 		$insertData = array(
 			'id_supp' => $this->post('id_supp'),
 			'nama_supp' => $this->post('nama_supp'),
@@ -76,15 +81,15 @@ class Supplier extends REST_Controller {
 		if ($query) {
 			$responseCode = "00";
 			$responseDesc = "Success to create supplier";
-			$responseData = $insertData;		
+			$responseData = $insertData;
+			$response = resultJson( $responseCode, $responseDesc, $responseData);
 		}
 		else{	
 			$responseCode = "01";
 			$responseDesc = "Failed to create supplier";
 			$responseData = $insertData;
-		}
-		
-		$response = resultJson( $responseCode, $responseDesc, $responseData);
+			$response = resultJson( $responseCode, $responseDesc, $responseData);
+		}				
 
 		$this->response($response, 200);
     }
