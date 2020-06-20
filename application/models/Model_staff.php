@@ -31,21 +31,6 @@ class Model_staff extends CI_Model {
 		return $data->result();
 	}
 
-	public function getAccessStaff($username, $password){
-		$this->db->where('usr_name', $username);
-		$this->db->select('*');
-		$this->db->from($this->table_1);
-		$staff = $this->db->get()->result()[0];				
-		if($staff){
-			$passwordTrue = password_verify($password, $staff->password);
-			if($passwordTrue){
-				return $staff;
-			}
-		}
-
-		return false;
-	}
-
 	public function insertStaff($data='')
 	{
 		$query = $this->db->insert($this->table_1, $data);
