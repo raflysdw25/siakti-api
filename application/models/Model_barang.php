@@ -33,6 +33,17 @@ class Model_barang extends CI_Model {
 		return $data->result();
 	}
 
+	public function getBarcodeBarang($barcode)
+	{				
+		$this->db->where('barcode', $barcode);
+		$this->db->select($this->table_1.'.*, '.$this->table_2.'.nama_supp as nama_supp');
+		$this->db->from($this->table_1);
+		$this->db->join($this->table_2,$this->table_1.'.supplier_id_supp = '.$this->table_2.'.id_supp', 'left');
+
+		$data = $this->db->get();
+		return $data->result();
+	}
+
 	public function getMaxId()
 	{
 		$this->db->select('max(kode_brg)');

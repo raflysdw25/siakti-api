@@ -43,6 +43,50 @@ class Peminjaman extends REST_Controller {
 		$this->response($response, 200);
 	}
 
+	public function pinjamMahasiswa_get()
+	{
+		$mahasiswa_nim = $this->get('mahasiswa_nim');
+
+		if($mahasiswa_nim != null){
+            $data = $this->mp->getPeminjamanMhs($mahasiswa_nim);
+			$responseCode = "200";
+			$responseDesc = "Success get a peminjaman";
+			$responseData = $data;            
+		}else{
+			$responseCode = "204";
+			$responseDesc = "Data not Found";
+			$responseData = null;
+		}
+		
+		
+
+		$response = resultJson( $responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+	}
+
+	public function pinjamStaff_get()
+	{
+		$staff_nip = $this->get('staff_nip');
+
+		if($staff_nip != null){
+            $data = $this->mp->getPeminjamanStaff($staff_nip);
+			$responseCode = "200";
+			$responseDesc = "Success get a peminjaman";
+			$responseData = $data;            
+		}else{
+			$responseCode = "204";
+			$responseDesc = "Data not Found";
+			$responseData = null;
+		}
+		
+		
+
+		$response = resultJson( $responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+	}
+
 	// Digunakan untuk membuat data peminjaman dahulu, agar user bisa memasukkan barang yang dipinjam.
 	public function index_post()
 	{	
@@ -105,7 +149,8 @@ class Peminjaman extends REST_Controller {
 
 		// Null Check
 		$mahasiswa_nim = ($this->put('mahasiswa_nim') !== null) ?  $this->put('mahasiswa_nim') : null;		
-        $staff_nip = ($this->put('staff_nip') !== null) ?  $this->put('staff_nip') : null;		
+		$staff_nip = ($this->put('staff_nip') !== null) ?  $this->put('staff_nip') : null;
+		$staff_penanggungjawab = ($this->put('staff_penanggungjawab') !== null) ?  $this->put('staff_penanggungjawab') : null;		
 		$tgl_blk_real = ($this->put('tgl_blk_real') !== null)?  $this->put('tgl_blk_real') : null;		
 		
 		$updateData = array(				
@@ -114,7 +159,10 @@ class Peminjaman extends REST_Controller {
 			'tgl_blk_real' => $tgl_blk_real,
 			'mahasiswa_nim' => $mahasiswa_nim,
 			'staff_nip' => $staff_nip,
-			'status' => "SUCCESS"
+			'staff_penanggungjawab' => $staff_penanggungjawab,
+			'status' => "SUCCESS",
+			'keperluan' => $this->put('keperluan'),
+			'ruangan_idruangan' => $this->put('ruangan_idruangan'),
 		);
 
 		$query = $this->mp->updatePeminjaman($kd_pjm, $updateData);

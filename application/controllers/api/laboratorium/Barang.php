@@ -36,6 +36,26 @@ class Barang extends REST_Controller {
 		$this->response($response, 200);
 	}
 
+	public function barcodeBarang_get()
+	{
+		$barcode = $this->get('barcode');
+		if($barcode){
+			$data = $this->mb->getBarcodeBarang($barcode);
+			$responseCode = "200";
+			$responseDesc = "Success get a barang";
+			$responseData = $data;	
+		}else{
+			$responseCode = "204";
+			$responseDesc = "Data not Found";
+			$responseData = null;
+		}
+		
+
+		$response = resultJson( $responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+	}
+
 	public function maxId_get()
 	{
 		$data = $this->mb->getMaxId();
@@ -64,7 +84,7 @@ class Barang extends REST_Controller {
 			'nama_brg' => $this->post('nama_brg'),
 			'jenis' => $this->post('jenis'),
 			'spesifikasi' => $this->post('spesifikasi'),
-			'status' => "TERSEDIA",
+			'status' => $this->post('status'),
 			'jumlah' => $this->post('jumlah'),
 			'satuan' => $this->post('satuan'),
 			'barcode' => $this->post('barcode'),
@@ -136,6 +156,7 @@ class Barang extends REST_Controller {
 		
 		$updateData = array(			
 			'status' => $this->put('status'),
+			'jumlah' => $this->put('jumlah'),
 		);
 
 		$query = $this->mb->updateBarang($kode_brg, $updateData);

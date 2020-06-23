@@ -63,6 +63,23 @@ class PeminjamanDetail extends REST_Controller {
 		$this->response($response, 200);
 	}
 
+	public function maxId_get()
+	{
+		$data = $this->mpd->getMaxId();
+		if($data){
+			$responseCode = "200";
+			$responseDesc = "Success get a peminjam";
+			$responseData = $data;
+		}else{
+			$responseCode = "204";
+			$responseDesc = "Data not Found";
+			$responseData = null;
+		}
+		$response = resultJson( $responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+	}
+
 
 	public function index_post()
 	{			        

@@ -5,7 +5,9 @@ class Model_peminjaman extends CI_Model {
 
 
 	// please use $table_number = table name 
-	private $table_1 = 'tik.pinjambrg';
+	private $table_pinjambrg = 'tik.pinjambrg';
+	private $table_ruangan = 'tik.ruangan';
+	private $table_staff = 'tik.staff';
 
 
 
@@ -25,8 +27,48 @@ class Model_peminjaman extends CI_Model {
 			$this->db->where('kd_pjm', $kd_pjm);
 		}
 
+
 		$this->db->select('*');
-		$this->db->from($this->table_1);
+		$this->db->from($this->table_pinjambrg);		
+
+		$data = $this->db->get();
+		return $data->result();
+	}
+
+	public function getPeminjamanMhs($mahasiswa_nim)
+	{
+		// Memanggil table user
+        if ($mahasiswa_nim) {
+			$this->db->where('mahasiswa_nim', $mahasiswa_nim);
+		}
+
+		$this->db->select(
+			$this->table_pinjambrg.'.*,'
+			.$this->table_ruangan.'.namaruang,'
+			.$this->table_staff.'.nama as nama_penanggungjawab,');
+		$this->db->from($this->table_pinjambrg);
+		$this->db->join($this->table_staff, $this->table_pinjambrg.'.staff_penanggungjawab = '.$this->table_staff.'.nip', 'left');
+		$this->db->join($this->table_ruangan, $this->table_pinjambrg.'.ruangan_idruangan = '.$this->table_ruangan.'.id_ruangan', 'left');
+
+		$data = $this->db->get();
+		return $data->result();
+	}
+
+	public function getPeminjamanStaff($staff_nip)
+	{
+		// Memanggil table user
+        if ($staff_nip) {
+			$this->db->where('staff_nip', $staff_nip);
+		}
+
+		$this->db->select(
+			$this->table_pinjambrg.'.*,'
+			.$this->table_ruangan.'.namaruang,'
+			.$this->table_staff.'.nama as nama_staff,'
+			.$this->table_staff.'.tlp_staff as tlp_staff,');
+		$this->db->from($this->table_pinjambrg);
+		$this->db->join($this->table_staff, $this->table_pinjambrg.'.staff_nip = '.$this->table_staff.'.nip', 'left');
+		$this->db->join($this->table_ruangan, $this->table_pinjambrg.'.ruangan_idruangan = '.$this->table_ruangan.'.id_ruangan', 'left');
 
 		$data = $this->db->get();
 		return $data->result();
@@ -35,7 +77,7 @@ class Model_peminjaman extends CI_Model {
 	public function getMaxId()
 	{
 		$this->db->select('max(kd_pjm)');
-		$this->db->from($this->table_1);
+		$this->db->from($this->table_pinjambrg);
 
 		$data = $this->db->get();
 		return $data->result();
@@ -43,7 +85,7 @@ class Model_peminjaman extends CI_Model {
 
 	public function insertPeminjaman($data='')
 	{
-		$query = $this->db->insert($this->table_1, $data);
+		$query = $this->db->insert($this->table_pinjambrg, $data);
 
 		if ($this->db->affected_rows() == 1) {
 			return true;
@@ -55,7 +97,7 @@ class Model_peminjaman extends CI_Model {
 	public function updatePeminjaman($kd_pjm, $data)
 	{
 		$this->db->where('kd_pjm', $kd_pjm);
-		$query = $this->db->update($this->table_1,$data);
+		$query = $this->db->update($this->table_pinjambrg,$data);
 
 		if ($this->db->affected_rows() == 1) {
 			return true;
@@ -67,7 +109,7 @@ class Model_peminjaman extends CI_Model {
 	public function deletePeminjaman($kd_pjm)
 	{
 		$this->db->where('kd_pjm', $kd_pjm);
-		$query = $this->db->delete($this->table_1);
+		$query = $this->db->delete($this->table_pinjambrg);
 
 		if ($this->db->affected_rows() == 1) {
 			return true;

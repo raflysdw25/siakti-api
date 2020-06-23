@@ -23,9 +23,9 @@ class Model_peminjamandetail extends CI_Model {
 	{		
 		$this->db->where('pinjambrg_kd_pjm', $pinjambrg_kd_pjm);
 
-		$this->db->select($this->table_1.'.*,'.$this->table_2.'.nama_brg as nama_brg');
+		$this->db->select($this->table_1.'.*,'.$this->table_2.'.nama_brg,'.$this->table_2.'.jenis,'.$this->table_2.'.jumlah as jumlah_brg,'.$this->table_2.'.status');
 		$this->db->from($this->table_1);
-		$this->db->join($this->table_2,$this->table_1.'.barang_kode_brg = '.$this->table_2.'.kode_brg');
+		$this->db->join($this->table_2,$this->table_1.'.barang_kode_brg = '.$this->table_2.'.kode_brg', 'left');
 
 		$data = $this->db->get();
 		return $data->result();
@@ -41,6 +41,15 @@ class Model_peminjamandetail extends CI_Model {
 		$this->db->select($this->table_1.'.*,'.$this->table_2.'.nama_brg as nama_brg');
 		$this->db->from($this->table_1);
 		$this->db->join($this->table_2,$this->table_1.'.barang_kode_brg = '.$this->table_2.'.kode_brg');
+
+		$data = $this->db->get();
+		return $data->result();
+	}
+
+	public function getMaxId()
+	{
+		$this->db->select('max(id_detail)');
+		$this->db->from($this->table_1);
 
 		$data = $this->db->get();
 		return $data->result();
