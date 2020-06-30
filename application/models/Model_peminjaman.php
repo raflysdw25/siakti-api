@@ -8,6 +8,7 @@ class Model_peminjaman extends CI_Model {
 	private $table_pinjambrg = 'tik.pinjambrg';
 	private $table_ruangan = 'tik.ruangan';
 	private $table_staff = 'tik.staff';
+	private $table_mahasiswa = 'tik.mahasiswa';
 
 
 
@@ -28,8 +29,15 @@ class Model_peminjaman extends CI_Model {
 		}
 
 
-		$this->db->select('*');
-		$this->db->from($this->table_pinjambrg);		
+		$this->db->select(
+			$this->table_pinjambrg.'.*,'
+			.$this->table_ruangan.'.namaruang,'
+			.$this->table_staff.'.nama as nama_penanggungjawab,'
+			.$this->table_mahasiswa.'.nama_mhs as nama_mhs,');
+		$this->db->from($this->table_pinjambrg);
+		$this->db->join($this->table_staff, $this->table_pinjambrg.'.staff_penanggungjawab = '.$this->table_staff.'.nip', 'left');
+		$this->db->join($this->table_ruangan, $this->table_pinjambrg.'.ruangan_idruangan = '.$this->table_ruangan.'.id_ruangan', 'left');
+		$this->db->join($this->table_mahasiswa, $this->table_pinjambrg.'.mahasiswa_nim = '.$this->table_mahasiswa.'.nim', 'left');		
 
 		$data = $this->db->get();
 		return $data->result();
@@ -45,10 +53,12 @@ class Model_peminjaman extends CI_Model {
 		$this->db->select(
 			$this->table_pinjambrg.'.*,'
 			.$this->table_ruangan.'.namaruang,'
-			.$this->table_staff.'.nama as nama_penanggungjawab,');
+			.$this->table_staff.'.nama as nama_penanggungjawab,'
+			.$this->table_mahasiswa.'.nama_mhs as nama_mhs,');
 		$this->db->from($this->table_pinjambrg);
 		$this->db->join($this->table_staff, $this->table_pinjambrg.'.staff_penanggungjawab = '.$this->table_staff.'.nip', 'left');
 		$this->db->join($this->table_ruangan, $this->table_pinjambrg.'.ruangan_idruangan = '.$this->table_ruangan.'.id_ruangan', 'left');
+		$this->db->join($this->table_mahasiswa, $this->table_pinjambrg.'.mahasiswa_nim = '.$this->table_mahasiswa.'.nim', 'left');
 
 		$data = $this->db->get();
 		return $data->result();
@@ -69,6 +79,7 @@ class Model_peminjaman extends CI_Model {
 		$this->db->from($this->table_pinjambrg);
 		$this->db->join($this->table_staff, $this->table_pinjambrg.'.staff_nip = '.$this->table_staff.'.nip', 'left');
 		$this->db->join($this->table_ruangan, $this->table_pinjambrg.'.ruangan_idruangan = '.$this->table_ruangan.'.id_ruangan', 'left');
+		
 
 		$data = $this->db->get();
 		return $data->result();

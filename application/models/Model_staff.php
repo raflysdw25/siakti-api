@@ -5,7 +5,11 @@ class Model_staff extends CI_Model {
 
 
 	// please use $table_number = table name 
-	private $table_1 = 'tik.staff';
+	private $table_staff = 'tik.staff';
+	private $table_jabatan = 'tik.jab_dsn';
+	private $table_struktural = 'tik.jab_struk';
+	private $table_prodi = 'tik.prodi';
+	
 
 
 
@@ -24,8 +28,19 @@ class Model_staff extends CI_Model {
 			$this->db->where('nip', $nip);
 		}
 
-		$this->db->select('*');
-		$this->db->from($this->table_1);
+		$this->db->select(
+			$this->table_staff.'.*,'.
+			$this->table_jabatan.'.*,'.
+			$this->table_struktural.'.nama_jab as jabatan,'.
+			$this->table_prodi.'.namaprod as nama_prodi'
+		);
+		$this->db->from($this->table_staff);
+		$this->db->join(
+			$this->table_jabatan, $this->table_staff.'.nip = '.$this->table_jabatan.'.staff_nip', 'left');
+		$this->db->join(
+			$this->table_struktural, $this->table_jabatan.'.jab_struk_id_jabstruk = '.$this->table_struktural.'.id_jabstruk', 'left');
+			$this->db->join(
+				$this->table_prodi, $this->table_staff.'.prodi_prodi_id = '.$this->table_prodi.'.prodi_id', 'left');
 
 		$data = $this->db->get();
 		return $data->result();
@@ -34,8 +49,20 @@ class Model_staff extends CI_Model {
 	public function getAccess($usr_name, $password)
 	{
 		$this->db->where('usr_name', $usr_name);
-		$this->db->select('*');
-		$this->db->from($this->table_1);
+		$this->db->or_where('nip', $usr_name);
+		$this->db->select(
+			$this->table_staff.'.*,'.
+			$this->table_jabatan.'.*,'.
+			$this->table_struktural.'.nama_jab as jabatan,'.
+			$this->table_prodi.'.namaprod as nama_prodi'
+		);
+		$this->db->from($this->table_staff);
+		$this->db->join(
+			$this->table_jabatan, $this->table_staff.'.nip = '.$this->table_jabatan.'.staff_nip', 'left');
+		$this->db->join(
+			$this->table_struktural, $this->table_jabatan.'.jab_struk_id_jabstruk = '.$this->table_struktural.'.id_jabstruk', 'left');
+			$this->db->join(
+				$this->table_prodi, $this->table_staff.'.prodi_prodi_id = '.$this->table_prodi.'.prodi_id', 'left');
 
 		$staff = $this->db->get()->result()[0];
 		if($staff){
@@ -50,7 +77,7 @@ class Model_staff extends CI_Model {
 
 	public function insertStaff($data='')
 	{
-		$query = $this->db->insert($this->table_1, $data);
+		$query = $this->db->insert($this->table_staff, $data);
 
 		if ($this->db->affected_rows() == 1) {
 			return true;
@@ -62,7 +89,7 @@ class Model_staff extends CI_Model {
 	public function updateStaff($nip, $data)
 	{
 		$this->db->where('nip', $nip);
-		$query = $this->db->update($this->table_1,$data);
+		$query = $this->db->update($this->table_staff,$data);
 
 		if ($this->db->affected_rows() == 1) {
 			return true;
@@ -74,7 +101,7 @@ class Model_staff extends CI_Model {
 	public function deleteStaff($nip)
 	{
 		$this->db->where('nip', $nip);
-		$query = $this->db->delete($this->table_1);
+		$query = $this->db->delete($this->table_staff);
 
 		if ($this->db->affected_rows() == 1) {
 			return true;

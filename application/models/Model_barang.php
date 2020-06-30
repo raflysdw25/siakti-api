@@ -5,8 +5,9 @@ class Model_barang extends CI_Model {
 
 
 	// please use $table_number = table name 
-	private $table_1 = 'tik.barang';
-	private $table_2 = 'tik.supplier';
+	private $table_barang = 'tik.barang';
+	private $table_supplier = 'tik.supplier';
+	private $table_jenisbarang = 'tik.jenis_barang';
 
 
 
@@ -25,9 +26,13 @@ class Model_barang extends CI_Model {
 			$this->db->where('kode_brg', $kode_brg);
 		}
 
-		$this->db->select($this->table_1.'.*, '.$this->table_2.'.nama_supp as nama_supp');
-		$this->db->from($this->table_1);
-		$this->db->join($this->table_2,$this->table_1.'.supplier_id_supp = '.$this->table_2.'.id_supp', 'left');
+		$this->db->select(
+			$this->table_barang.'.*, '.
+			$this->table_supplier.'.nama_supp as nama_supp,'.
+			$this->table_jenisbarang.'.nama_jenis as nama_jenis');
+		$this->db->from($this->table_barang);
+		$this->db->join($this->table_supplier,$this->table_barang.'.supplier_id_supp = '.$this->table_supplier.'.id_supp', 'left');
+		$this->db->join($this->table_jenisbarang,$this->table_barang.'.jenis_id_jenis = '.$this->table_jenisbarang.'.id_jenis', 'left');
 
 		$data = $this->db->get();
 		return $data->result();
@@ -36,9 +41,39 @@ class Model_barang extends CI_Model {
 	public function getBarcodeBarang($barcode)
 	{				
 		$this->db->where('barcode', $barcode);
-		$this->db->select($this->table_1.'.*, '.$this->table_2.'.nama_supp as nama_supp');
-		$this->db->from($this->table_1);
-		$this->db->join($this->table_2,$this->table_1.'.supplier_id_supp = '.$this->table_2.'.id_supp', 'left');
+		$this->db->select(
+			$this->table_barang.'.*, '.
+			$this->table_supplier.'.nama_supp as nama_supp,'.
+			$this->table_jenisbarang.'.nama_jenis as nama_jenis');
+		$this->db->from($this->table_barang);
+		$this->db->join($this->table_supplier,$this->table_barang.'.supplier_id_supp = '.$this->table_supplier.'.id_supp', 'left');
+		$this->db->join($this->table_jenisbarang,$this->table_barang.'.jenis_id_jenis = '.$this->table_jenisbarang.'.id_jenis', 'left');
+
+		$data = $this->db->get();
+		return $data->result();
+	}
+
+	public function getNamaBarang(){
+		$this->db->select('nama_brg, COUNT(nama_brg) as jumlah_brg');
+		$this->db->from($this->table_barang);
+		$this->db->group_by('nama_brg');
+
+		$data = $this->db->get();
+		return $data->result();
+	}
+
+	public function getCountKondisi($kondisi){
+		if($kondisi == 'RUSAK'){
+			$this->db->where('kondisi', 'RUSAK');			
+		}elseif ($kondisi == 'BAIK') {
+			$this->db->where('kondisi', 'BAIK');			
+		}elseif($kondisi == 'HABIS'){
+			$this->db->where('kondisi', 'HABIS');			
+		}
+
+		$this->db->select('nama_brg, COUNT(kondisi) as kondisi');
+		$this->db->from($this->table_barang);
+		$this->db->group_by('nama_brg');
 
 		$data = $this->db->get();
 		return $data->result();
@@ -47,7 +82,7 @@ class Model_barang extends CI_Model {
 	public function getMaxId()
 	{
 		$this->db->select('max(kode_brg)');
-		$this->db->from($this->table_1);
+		$this->db->from($this->table_barang);
 
 		$data = $this->db->get();
 		return $data->result();
@@ -55,7 +90,7 @@ class Model_barang extends CI_Model {
 
 	public function insertBarang($data='')
 	{
-		$query = $this->db->insert($this->table_1, $data);
+		$query = $this->db->insert($this->table_barang, $data);
 
 		if ($this->db->affected_rows() == 1) {
 			return true;
@@ -67,7 +102,7 @@ class Model_barang extends CI_Model {
 	public function updateBarang($kode_brg, $data)
 	{
 		$this->db->where('kode_brg', $kode_brg);
-		$query = $this->db->update($this->table_1,$data);
+		$query = $this->db->update($this->table_barang,$data);
 
 		if ($this->db->affected_rows() == 1) {
 			return true;
@@ -79,7 +114,7 @@ class Model_barang extends CI_Model {
 	public function deleteBarang($kode_brg='')
 	{
 		$this->db->where('kode_brg', $kode_brg);
-		$query = $this->db->delete($this->table_1);
+		$query = $this->db->delete($this->table_barang);
 
 		if ($this->db->affected_rows() == 1) {
 			return true;

@@ -58,6 +58,30 @@ class Supplier extends REST_Controller {
 		$this->response($response, 200);
 	}
 
+	public function namaSupp_post()
+	{
+		$nama_supp = ucwords($this->post('nama_supp'));
+		$id_supp = $this->post('id_supp');
+		if($id_supp != null){
+			$data = $this->ms->getNamaSupplier($nama_supp, $id_supp);
+		}else{
+			$data = $this->ms->getNamaSupplier($nama_supp);
+		}
+
+		if($data){
+			$responseCode = "200";
+			$responseDesc = "Success get supplier name";
+			$responseData = $data;
+		}else{
+			$responseCode = "204";
+			$responseDesc = "Data not Found";
+			$responseData = null;
+		}
+		$response = resultJson( $responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+	}
+
 
 	public function index_post()
 	{
@@ -69,10 +93,10 @@ class Supplier extends REST_Controller {
 
 		$insertData = array(
 			'id_supp' => $this->post('id_supp'),
-			'nama_supp' => $this->post('nama_supp'),
-			'alamat' => $this->post('alamat'),
+			'nama_supp' => ucwords($this->post('nama_supp')),
+			'alamat' => ($this->post('alamat') == null) ? null : $this->post('alamat'),
 			'tlpn' => $this->post('tlpn'),
-			'email' => $this->post('email'),
+			'email' => ($this->post('email') == null) ? null : $this->post('email'),
 			'pic' => $this->post('pic')
 		);
 
@@ -100,9 +124,9 @@ class Supplier extends REST_Controller {
 
 		$updateData = array(						
 			'nama_supp' => $this->put('nama_supp'),
-			'alamat' => $this->put('alamat'),
+			'alamat' => ($this->put('alamat') == null) ? null : $this->put('alamat'),
 			'tlpn' => $this->put('tlpn'),
-			'email' => $this->put('email'),
+			'email' => ($this->put('email') == null) ? null : $this->put('email'),
 			'pic' => $this->put('pic')
 		);
 
@@ -111,10 +135,12 @@ class Supplier extends REST_Controller {
 		if ($query) {
 			$responseCode = "00";
 			$responseDesc = "Success to update user";
+			$responseData = $updateData;
 		}
 		else{
 			$responseCode = "01";
 			$responseDesc = "Failed to update user";
+			$responseData = null;
 		}
 		
 
