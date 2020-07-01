@@ -6,20 +6,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 use Restserver\Libraries\REST_Controller;
 
-class ProgramStudi extends REST_Controller {
+class Struktural extends REST_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('model_programstudi', 'mps');
+		$this->load->model('model_struktural', 'mst');
 	}
 
 
 	public function index_get()
 	{
-		$prodi_id = $this->get('prodi_id');
+		$id_jabstruk = $this->get('id_jabstruk');
 
-		if($prodi_id){
-			$data = $this->mps->getProdi($prodi_id);
+		if($id_jabstruk){
+			$data = $this->mst->getStruktural($id_jabstruk);
 			if($data){
                 $responseCode = "200";
                 $responseDesc = "Success get a program studi";
@@ -30,7 +30,7 @@ class ProgramStudi extends REST_Controller {
                 $responseData = null;
             }
 		}else{
-			$data = $this->mps->getProdi();
+			$data = $this->mst->getStruktural();
 			$responseCode = "200";
 			$responseDesc = "Success get All program studi";
 			$responseData = $data;

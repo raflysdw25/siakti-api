@@ -75,7 +75,7 @@ class Model_staff extends CI_Model {
 		return false;
 	}
 
-	public function insertStaff($data='')
+	public function insertStaff($data)
 	{
 		$query = $this->db->insert($this->table_staff, $data);
 

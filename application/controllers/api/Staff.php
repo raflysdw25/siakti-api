@@ -44,21 +44,25 @@ class Staff extends REST_Controller {
 
 	public function index_post()
 	{    
-        $usr_name = ($this->post('usr_name') !== null) ? $this->post('usr_name'): '';
-        $password = ($this->post('password') !== null) ? $this->post('password'): '';
+        $usr_name = ($this->post('usr_name') !== null) ? $this->post('usr_name') : null;
+        $password = ($this->post('password') !== null) ? $this->post('password') : null;
+        $kel_staff = ($this->post('kel_staff') !== null) ? $this->post('kel_staff') : null;
+        $kec_staff = ($this->post('kec_staff') !== null) ? $this->post('kec_staff') : null;
+        $kota_staff = ($this->post('kota_staff') !== null) ? $this->post('kota_staff') : null;
+        $prodi_prodi_id = ($this->post('prodi_prodi_id') !== null) ? $this->post('prodi_prodi_id') : null;
 
         $insertData = array(
             'nip' => $this->post('nip'),
             'nama' => $this->post('nama'),
             'alamat' => $this->post('alamat'),
-            'kec_staff' => $this->post('kec_staff'),
-            'kel_staff' => $this->post('kel_staff'),            
-            'kota_staff' => $this->post('kota_staff'),
+            'kec_staff' => $kec_staff,
+            'kel_staff' => $kel_staff,            
+            'kota_staff' => $kota_staff,
             'tlp_staff' => $this->post('tlp_staff'),
             'email_staff' => $this->post('email_staff'),
             'usr_name' => $usr_name,
             'password' => $password,
-            'prodi_prodi_id' => $this->post('prodi_prodi_id')			
+            'prodi_prodi_id' => $prodi_prodi_id			
         );
 
         $query = $this->ms->insertStaff($insertData);
@@ -128,10 +132,12 @@ class Staff extends REST_Controller {
         if ($query) {
             $responseCode = "00";
             $responseDesc = "Success to update user";
+            $responseData = $updateData;
         }
         else{
             $responseCode = "01";
             $responseDesc = "Failed to update user";
+            $responseData = null;
         }
 		
 		$response = resultJson( $responseCode, $responseDesc, $responseData);
@@ -141,22 +147,23 @@ class Staff extends REST_Controller {
     
     public function updateAccount_put()
     {
-        $nim = $this->put('nim');
+        $nip = $this->put('nip');
 
-        $updateData = array(				 
-            'usr_name' => $this->put('usr_name'),
+        $updateData = array(				             
             'password' => $this->put('password')                        
         );
 
-        $query = $this->mm->updateMahasiswa($nim, $updateData);
+        $query = $this->ms->updateStaff($nip, $updateData);
 
         if ($query) {
             $responseCode = "00";
-            $responseDesc = "Success to update kartu user";
+            $responseDesc = "Success to update staff account";
+            $responseData = $updateData;
         }
         else{
             $responseCode = "01";
-            $responseDesc = "Failed to update kartu user";
+            $responseDesc = "Failed to update staff account";
+            $responseData = null;
         }
         
         $response = resultJson( $responseCode, $responseDesc, $responseData);
