@@ -26,7 +26,7 @@ class Model_supplier extends CI_Model {
 
 		$this->db->select('*');
 		$this->db->from($this->table_supplier);
-
+		$this->db->order_by('id_supp', 'desc');
 		$data = $this->db->get();
 		return $data->result();
 	}

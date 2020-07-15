@@ -40,6 +40,30 @@ class StrukturalLab extends REST_Controller {
 
 		$this->response($response, 200);
 	}
+
+	public function namaStruktural_post()
+	{
+		$nama_jab = ucwords($this->post('nama_jab'));
+		$id_jablab_struk = $this->post('id_jablab_struk');
+		if($id_jablab_struk != null){
+			$data = $this->mst->getNamaStruktural($nama_jab, $id_jablab_struk);
+		}else{
+			$data = $this->mst->getNamaStruktural($nama_jab);
+		}
+
+		if($data){
+			$responseCode = "200";
+			$responseDesc = "Success get struktural name";
+			$responseData = $data;
+		}else{
+			$responseCode = "204";
+			$responseDesc = "Data not Found";
+			$responseData = null;
+		}
+		$response = resultJson( $responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+	}
 		
 
 	public function index_post()
@@ -79,7 +103,7 @@ class StrukturalLab extends REST_Controller {
 			'nama_jab' => $this->put('nama_jab'),
 		);
 
-		$query = $this->ms->updateStruktural($id_jablab_struk, $updateData);
+		$query = $this->mst->updateStruktural($id_jablab_struk, $updateData);
 
 		if ($query) {
 			$responseCode = "00";
@@ -101,7 +125,7 @@ class StrukturalLab extends REST_Controller {
 	public function index_delete()
 	{
 		$id_jablab_struk = $this->delete('id_jablab_struk');
-		$query = $this->ms->deleteStruktural($id_jablab_struk);
+		$query = $this->mst->deleteStruktural($id_jablab_struk);
 
 		if ($query) {
 			$responseCode = "00";

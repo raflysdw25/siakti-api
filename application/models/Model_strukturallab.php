@@ -27,7 +27,7 @@ class Model_strukturallab extends CI_Model {
 
 		$this->db->select('*');
 		$this->db->from($this->table_struktural);		
-
+		$this->db->order_by('id_jablab_struk', 'asc');
 		$data = $this->db->get();
 		return $data->result();
 	}
@@ -52,10 +52,26 @@ class Model_strukturallab extends CI_Model {
 		}
 	}
 
+	public function getNamaStruktural($nama_jab, $id_jablab_struk='')
+	{	
+		$this->db->where('nama_jab', $nama_jab);
+		if($id_jablab_struk){
+			$this->db->where_not_in('id_jablab_struk', $id_jablab_struk);	
+		}	
+		
+
+		$this->db->select('*');
+		$this->db->from($this->table_struktural);
+
+		$data = $this->db->get();
+		return $data->result();
+	}
+
+
 	public function updateStruktural($id_jablab_struk, $data)
 	{
 		$this->db->where('id_jablab_struk', $id_jablab_struk);
-		$query = $this->db->update($this->struktural,$data);
+		$query = $this->db->update($this->table_struktural,$data);
 
 		if ($this->db->affected_rows() == 1) {
 			return true;
