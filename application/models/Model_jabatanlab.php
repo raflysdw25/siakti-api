@@ -1,11 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Model_jabatandosen extends CI_Model {
+class Model_jabatanlab extends CI_Model {
 
 
 	// please use $table_number = table name 	
-	private $table_jabdsn = 'tik.jab_dsn';
+	private $table_jablab = 'tik.jab_lab';
 	
 
 
@@ -19,27 +19,27 @@ class Model_jabatandosen extends CI_Model {
 	// for the result, this is a simple request you can improve by your self to make a any response
 
 
-	public function getJabatanDosen($id_jabdsn='')
+	public function getJabatanLab($id_jablab='')
 	{
-		if ($id_jabdsn) {
-			$this->db->where('id_jabdsn', $id_jabdsn);
+		if ($id_jablab) {
+			$this->db->where('id_jablab', $id_jablab);
 		}
 
 		$this->db->select('*');
-		$this->db->from($this->table_jabdsn);		
+		$this->db->from($this->table_jablab);		
 
 		$data = $this->db->get();
 		return $data->result();
 	}
 
-	public function cekJabatanDosen($staff_nip)
+	public function cekJabatanLab($staff_nip)
 	{
 		if ($staff_nip) {
 			$this->db->where('staff_nip', $staff_nip);
 		}
 
 		$this->db->select('*');
-		$this->db->from($this->table_jabdsn);		
+		$this->db->from($this->table_jablab);		
 
 		$data = $this->db->get();
 		return $data->result();
@@ -47,16 +47,16 @@ class Model_jabatandosen extends CI_Model {
 
 	public function getMaxId()
 	{
-		$this->db->select('max(id_jabdsn)');
-		$this->db->from($this->table_jabdsn);
+		$this->db->select('max(id_jablab)');
+		$this->db->from($this->table_jablab);
 
 		$data = $this->db->get();
 		return $data->result();
 	}
 	
-	public function insertJabatanDosen($data)
+	public function insertJabatanLab($data)
 	{
-		$query = $this->db->insert($this->table_jabdsn, $data);
+		$query = $this->db->insert($this->table_jablab, $data);
 
 		if ($this->db->affected_rows() == 1) {
 			return true;
@@ -65,10 +65,23 @@ class Model_jabatandosen extends CI_Model {
 		}
 	}
 
-	public function deleteJabatan($id_jabdsn)
+	public function updateJabatanLab($id_jablab, $data)
 	{
-		$this->db->where('id_jabdsn', $id_jabdsn);
-		$query = $this->db->delete($this->table_jabdsn);
+		$this->db->where('id_jablab', $id_jablab);
+		$query = $this->db->update($this->table_jablab,$data);
+
+		if ($this->db->affected_rows() == 1) {
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	// Hapus berdasarkan staff
+	public function deleteJabatan($staff_nip)
+	{
+		$this->db->where('staff_nip', $staff_nip);
+		$query = $this->db->delete($this->table_jablab);
 
 		if ($this->db->affected_rows() == 1) {
 			return true;

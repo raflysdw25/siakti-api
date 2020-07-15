@@ -85,14 +85,12 @@ class Supplier extends REST_Controller {
 
 	public function index_post()
 	{
-
-		$post = $this->post();
-        
-		$responseData = null;
-		
+		$id = $this->ms->getMaxId();
+		$id = $id[0]->max;
+		$next_id = number_format($id) + 1;
 
 		$insertData = array(
-			'id_supp' => $this->post('id_supp'),
+			'id_supp' => $next_id,
 			'nama_supp' => ucwords($this->post('nama_supp')),
 			'alamat' => ($this->post('alamat') == null) ? null : $this->post('alamat'),
 			'tlpn' => $this->post('tlpn'),
@@ -105,15 +103,16 @@ class Supplier extends REST_Controller {
 		if ($query) {
 			$responseCode = "00";
 			$responseDesc = "Success to create supplier";
-			$responseData = $insertData;
-			$response = resultJson( $responseCode, $responseDesc, $responseData);
+			$responseData = $insertData;			
 		}
 		else{	
 			$responseCode = "01";
 			$responseDesc = "Failed to create supplier";
-			$responseData = $insertData;
-			$response = resultJson( $responseCode, $responseDesc, $responseData);
-		}				
+			$responseData = $insertData;			
+		}
+
+
+		$response = resultJson( $responseCode, $responseDesc, $responseData);				
 
 		$this->response($response, 200);
     }
@@ -134,12 +133,12 @@ class Supplier extends REST_Controller {
 
 		if ($query) {
 			$responseCode = "00";
-			$responseDesc = "Success to update user";
+			$responseDesc = "Success to update supplier";
 			$responseData = $updateData;
 		}
 		else{
 			$responseCode = "01";
-			$responseDesc = "Failed to update user";
+			$responseDesc = "Failed to update supplier";
 			$responseData = null;
 		}
 		

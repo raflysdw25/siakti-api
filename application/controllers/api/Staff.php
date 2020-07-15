@@ -48,7 +48,7 @@ class Staff extends REST_Controller {
         $password = ($this->post('password') !== null) ? $this->post('password') : null;
         $kel_staff = ($this->post('kel_staff') !== null) ? $this->post('kel_staff') : null;
         $kec_staff = ($this->post('kec_staff') !== null) ? $this->post('kec_staff') : null;
-        $kota_staff = ($this->post('kota_staff') !== null) ? $this->post('kota_staff') : null;
+        
         $prodi_prodi_id = ($this->post('prodi_prodi_id') !== null) ? $this->post('prodi_prodi_id') : null;
 
         $insertData = array(
@@ -57,7 +57,7 @@ class Staff extends REST_Controller {
             'alamat' => $this->post('alamat'),
             'kec_staff' => $kec_staff,
             'kel_staff' => $kel_staff,            
-            'kota_staff' => $kota_staff,
+            'kota_staff' => $this->post('kota_staff'),
             'tlp_staff' => $this->post('tlp_staff'),
             'email_staff' => $this->post('email_staff'),
             'usr_name' => $usr_name,
@@ -131,12 +131,12 @@ class Staff extends REST_Controller {
 
         if ($query) {
             $responseCode = "00";
-            $responseDesc = "Success to update user";
+            $responseDesc = "Success to update staff";
             $responseData = $updateData;
         }
         else{
             $responseCode = "01";
-            $responseDesc = "Failed to update user";
+            $responseDesc = "Failed to update staff";
             $responseData = null;
         }
 		

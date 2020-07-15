@@ -97,8 +97,13 @@ class Peminjaman extends REST_Controller {
 		$tgl_blk = ($this->post('tgl_blk') !== null)?  $this->post('tgl_blk') : null;
 		$tgl_blk_real = ($this->post('tgl_blk_real') !== null)?  $this->post('tgl_blk_real') : null;		
 		
+		// Generate new ID
+		$id = $this->mp->getMaxId();
+		$id = $id[0]->max;
+		$next_id = number_format($id) + 1;
+		
 		$insertData = array(
-			'kd_pjm' => $this->post('kd_pjm'),
+			'kd_pjm' => $next_id,
 			'tgl_pjm' => $tgl_pjm,
 			'tgl_blk' => $tgl_blk,
 			'tgl_blk_real' => $tgl_blk_real,
@@ -151,7 +156,9 @@ class Peminjaman extends REST_Controller {
 		$mahasiswa_nim = ($this->put('mahasiswa_nim') !== null) ?  $this->put('mahasiswa_nim') : null;		
 		$staff_nip = ($this->put('staff_nip') !== null) ?  $this->put('staff_nip') : null;
 		$staff_penanggungjawab = ($this->put('staff_penanggungjawab') !== null) ?  $this->put('staff_penanggungjawab') : null;		
-		$tgl_blk_real = ($this->put('tgl_blk_real') !== null)?  $this->put('tgl_blk_real') : null;		
+		$tgl_blk_real = ($this->put('tgl_blk_real') !== null)?  $this->put('tgl_blk_real') : null;	
+		
+		$ruangan_idruangan = ($this->put('ruangan_idruangan') == null)? null : $this->put('ruangan_idruangan');
 		
 		$updateData = array(				
 			'tgl_pjm' => $this->put('tgl_pjm'),
@@ -160,9 +167,9 @@ class Peminjaman extends REST_Controller {
 			'mahasiswa_nim' => $mahasiswa_nim,
 			'staff_nip' => $staff_nip,
 			'staff_penanggungjawab' => $staff_penanggungjawab,
-			'status' => "SUCCESS",
+			'status' => $this->put('status'),
 			'keperluan' => $this->put('keperluan'),
-			'ruangan_idruangan' => $this->put('ruangan_idruangan'),
+			'ruangan_idruangan' => $ruangan_idruangan,
 		);
 
 		$query = $this->mp->updatePeminjaman($kd_pjm, $updateData);
@@ -219,11 +226,13 @@ class Peminjaman extends REST_Controller {
 
 		if ($query) {
 			$responseCode = "00";
-			$responseDesc = "Success to update user";
+			$responseDesc = "Success to update status";
+			$responseData = $updateData;
 		}
 		else{
 			$responseCode = "01";
-			$responseDesc = "Failed to update user";
+			$responseDesc = "Failed to update status";
+			$responseData = $updateData;
 		}
 		$response = resultJson( $responseCode, $responseDesc, $responseData);
 

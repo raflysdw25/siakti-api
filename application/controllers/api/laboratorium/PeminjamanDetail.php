@@ -95,9 +95,13 @@ class PeminjamanDetail extends REST_Controller {
 
 	public function index_post()
 	{			        
-		
+		// Generate new ID
+		$id = $this->mpd->getMaxId();
+		$id = $id[0]->max;
+		$next_id = number_format($id) + 1;
+
 		$insertData = array(
-			'id_detail' => $this->post('id_detail'),
+			'id_detail' => $next_id,
 			'pinjambrg_kd_pjm' => $this->post('pinjambrg_kd_pjm'),
 			'barang_kode_brg' => $this->post('barang_kode_brg')			
 		);

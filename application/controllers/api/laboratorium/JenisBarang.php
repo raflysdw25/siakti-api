@@ -56,10 +56,13 @@ class JenisBarang extends REST_Controller {
 
 	public function index_post()
 	{
+		$id = $this->mjb->getMaxId();
+		$id = $id[0]->max;
+		$next_id = number_format($id) + 1;
 			
 		// STATUS : TERSEDIA, DIGUNAKAN, RUSAK, HABIS
 		$insertData = array(
-			'id_jenis' => $this->post('id_jenis'),
+			'id_jenis' => $next_id,
 			'nama_jenis' => $this->post('nama_jenis'),
 			
 		);

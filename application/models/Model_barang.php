@@ -34,6 +34,7 @@ class Model_barang extends CI_Model {
 		$this->db->join($this->table_supplier,$this->table_barang.'.supplier_id_supp = '.$this->table_supplier.'.id_supp', 'left');
 		$this->db->join($this->table_jenisbarang,$this->table_barang.'.jenis_id_jenis = '.$this->table_jenisbarang.'.id_jenis', 'left');
 
+		$this->db->order_by('kode_brg','desc');
 		$data = $this->db->get();
 		return $data->result();
 	}
@@ -71,9 +72,38 @@ class Model_barang extends CI_Model {
 			$this->db->where('kondisi', 'HABIS');			
 		}
 
-		$this->db->select('nama_brg, COUNT(kondisi) as kondisi');
+		$this->db->select('nama_brg, COUNT(kondisi) as jumlah_brg');
 		$this->db->from($this->table_barang);
 		$this->db->group_by('nama_brg');
+
+		$data = $this->db->get();
+		return $data->result();
+	}
+
+	public function getFilterBarang($asal_pengadaan = '', $thn_pengadaan ='', $jenis_brg = '')
+	{
+		if($asal_pengadaan != null){
+			$this->db->where('asal_pengadaan', $asal_pengadaan);
+		}
+
+		if($thn_pengadaan != null){
+			$this->db->where('thn_pengadaan', $thn_pengadaan);
+		}
+
+		if($jenis_brg != null){
+			$this->db->where('jenis_id_jenis', $jenis_brg);
+		}
+
+		if($jenis_brg || $thn_pengadaan || $asal_pengadaan){
+			$this->db->select(
+				$this->table_barang.'.*, '.
+				$this->table_supplier.'.nama_supp as nama_supp,'.
+				$this->table_jenisbarang.'.nama_jenis as nama_jenis');
+			$this->db->from($this->table_barang);
+			$this->db->join($this->table_supplier,$this->table_barang.'.supplier_id_supp = '.$this->table_supplier.'.id_supp', 'left');
+			$this->db->join($this->table_jenisbarang,$this->table_barang.'.jenis_id_jenis = '.$this->table_jenisbarang.'.id_jenis', 'left');
+		}
+
 
 		$data = $this->db->get();
 		return $data->result();

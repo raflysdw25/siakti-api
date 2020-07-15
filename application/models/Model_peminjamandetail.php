@@ -26,9 +26,7 @@ class Model_peminjamandetail extends CI_Model {
 
 		$this->db->select(
 			$this->table_pinjambrgdetail.'.*,'.
-			$this->table_barang.'.jenis_id_jenis,'.
-			$this->table_barang.'.nama_brg,'.
-			$this->table_barang.'.kondisi,'.
+			$this->table_barang.'.*,'.			
 			$this->table_jenisbrg.'.nama_jenis,'
 			);
 		$this->db->from($this->table_pinjambrgdetail);

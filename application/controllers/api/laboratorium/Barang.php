@@ -114,16 +114,19 @@ class Barang extends REST_Controller {
 	public function index_post()
 	{
 		$supplier_id_supp = ($this->post('supplier_id_supp') == null)? null:$this->post('supplier_id_supp');
-		
+		$spesifikasi = ($this->post('spesifikasi') == null )? null : $this->post('spesifikasi');
+		$barcode = ($this->post('barcode') == null) ? null : $this->post('barcode');
+		$jenis_id_jenis = ($this->post('jenis_id_jenis') == null) ? null : $this->post('jenis_id_jenis');
 
 		// STATUS : TERSEDIA, DIGUNAKAN, RUSAK, HABIS
 		$insertData = array(
 			'kode_brg' => $this->post('kode_brg'),
 			'nama_brg' => $this->post('nama_brg'),
-			'jenis_id_jenis' => $this->post('jenis_id_jenis'),
-			'spesifikasi' => $this->post('spesifikasi'),
-			'kondisi' => $this->post('kondisi'),						
-			'barcode' => $this->post('barcode'),
+			'jenis_id_jenis' => $jenis_id_jenis,
+			'spesifikasi' => $spesifikasi,
+			'kondisi' => $this->post('kondisi'),
+			'status' => $this->post('status'),						
+			'barcode' => $barcode,
 			'thn_pengadaan' => $this->post('thn_pengadaan'),
 			'asal_pengadaan' => $this->post('asal_pengadaan'),
 			'supplier_id_supp' => $supplier_id_supp
@@ -148,6 +151,29 @@ class Barang extends REST_Controller {
 		$this->response($response, 200);
 	}
 
+
+	public function filter_post()
+	{		
+		$asal_pengadaan = $this->post('asal_pengadaan');
+		$thn_pengadaan = $this->post('thn_pengadaan');
+		$jenis_brg = $this->post('jenis_brg');
+		
+		$data = $this->mb->getFilterBarang($asal_pengadaan, $thn_pengadaan, $jenis_brg);
+		if($data){
+			$responseCode = "00";
+			$responseDesc = "Success get filter barang";
+			$responseData = $data;	
+		}else{
+			$responseCode = "01";
+			$responseDesc = "Data not Found";
+			$responseData = null;
+		}
+
+		$response = resultJson( $responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+	}
+
 	
 
 	public function index_put()
@@ -155,12 +181,16 @@ class Barang extends REST_Controller {
 		$kode_brg = $this->put('kode_brg');
 
 		$supplier_id_supp = ($this->put('supplier_id_supp') !== null)? $this->put('supplier_id_supp') : null;
+		$spesifikasi = ($this->put('spesifikasi') == null )? null : $this->put('spesifikasi');
+		$jenis_id_jenis = ($this->put('jenis_id_jenis') == null) ? null : $this->put('jenis_id_jenis');
+		
 		
 		$updateData = array(			
 			'nama_brg' => $this->put('nama_brg'),
-			'jenis_id_jenis' => $this->put('jenis_id_jenis'),
-			'spesifikasi' => $this->put('spesifikasi'),
-			'kondisi' => $this->put('kondisi'),						
+			'jenis_id_jenis' => $jenis_id_jenis,
+			'spesifikasi' => $spesifikasi,
+			'kondisi' => $this->put('kondisi'),
+			'status' => $this->put('status'),						
 			'barcode' => $this->put('barcode'),
 			'thn_pengadaan' => $this->put('thn_pengadaan'),
 			'asal_pengadaan' => $this->put('asal_pengadaan'),
@@ -185,12 +215,13 @@ class Barang extends REST_Controller {
 		$this->response($response, 200);
 	}
 
-	// Untuk mengganti status BARANG dari TERSEDIA,DIGUNAKAN, RUSAK
-	public function updateKondisi_put()
+	// Untuk mengganti kondisi BARANG dari BAIK, RUSAK, HABIS dan mengganti status BARANG dari TERSEDIA, DIGUNAKAN, TIDAK TERSEDIA
+	public function updateStatus_put()
 	{
 		$kode_brg = $this->put('kode_brg');		
 		
 		$updateData = array(			
+			'status' => $this->put('status'),
 			'kondisi' => $this->put('kondisi'),			
 		);
 
@@ -198,12 +229,13 @@ class Barang extends REST_Controller {
 
 		if ($query) {
 			$responseCode = "00";
-			$responseDesc = "Success to update kondisi barang";
-			$responseData = $this->put();
+			$responseDesc = "Success to update status barang";
+			$responseData = $updateData;
 		}
 		else{
 			$responseCode = "01";
-			$responseDesc = "Failed to update kondisi barang";
+			$responseDesc = "Failed to update status barang";
+			$responseData = null;
 		}
 		
 

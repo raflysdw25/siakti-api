@@ -5,7 +5,7 @@ class Model_supplier extends CI_Model {
 
 
 	// please use $table_number = table name 
-	private $table_1 = 'tik.supplier';
+	private $table_supplier = 'tik.supplier';
 
 
 
@@ -25,7 +25,7 @@ class Model_supplier extends CI_Model {
 		}
 
 		$this->db->select('*');
-		$this->db->from($this->table_1);
+		$this->db->from($this->table_supplier);
 
 		$data = $this->db->get();
 		return $data->result();
@@ -40,7 +40,7 @@ class Model_supplier extends CI_Model {
 		
 
 		$this->db->select('*');
-		$this->db->from($this->table_1);
+		$this->db->from($this->table_supplier);
 
 		$data = $this->db->get();
 		return $data->result();
@@ -49,7 +49,7 @@ class Model_supplier extends CI_Model {
 	public function getMaxId()
 	{
 		$this->db->select('max(id_supp)');
-		$this->db->from($this->table_1);
+		$this->db->from($this->table_supplier);
 
 		$data = $this->db->get();
 		return $data->result();
@@ -57,7 +57,7 @@ class Model_supplier extends CI_Model {
 
 	public function insertSupplier($data='')
 	{
-		$query = $this->db->insert($this->table_1, $data);
+		$query = $this->db->insert($this->table_supplier, $data);
 
 		if ($this->db->affected_rows() == 1) {
 			return true;
@@ -69,7 +69,7 @@ class Model_supplier extends CI_Model {
 	public function updateSupplier($id_supp, $data)
 	{
 		$this->db->where('id_supp', $id_supp);
-		$query = $this->db->update($this->table_1,$data);
+		$query = $this->db->update($this->table_supplier,$data);
 
 		if ($this->db->affected_rows() == 1) {
 			return true;
@@ -81,7 +81,7 @@ class Model_supplier extends CI_Model {
 	public function deleteSupplier($id_supp)
 	{
 		$this->db->where('id_supp', $id_supp);
-		$query = $this->db->delete($this->table_1);
+		$query = $this->db->delete($this->table_supplier);
 
 		if ($this->db->affected_rows() == 1) {
 			return true;
