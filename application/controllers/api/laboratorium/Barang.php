@@ -215,6 +215,32 @@ class Barang extends REST_Controller {
 		$this->response($response, 200);
 	}
 
+	public function generateBarcode_put(){
+		$kode_brg = $this->put('kode_brg');		
+		
+		$updateData = array(			
+			'barcode' => $this->put('barcode'),					
+		);
+
+		$query = $this->mb->updateBarang($kode_brg, $updateData);
+
+		if ($query) {
+			$responseCode = "00";
+			$responseDesc = "Success to update status barang";
+			$responseData = $updateData;
+		}
+		else{
+			$responseCode = "01";
+			$responseDesc = "Failed to update status barang";
+			$responseData = null;
+		}
+		
+
+		$response = resultJson( $responseCode, $responseDesc, $responseData);
+
+		$this->response($response, 200);
+	}
+
 	// Untuk mengganti kondisi BARANG dari BAIK, RUSAK, HABIS dan mengganti status BARANG dari TERSEDIA, DIGUNAKAN, TIDAK TERSEDIA
 	public function updateStatus_put()
 	{

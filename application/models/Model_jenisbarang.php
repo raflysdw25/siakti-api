@@ -25,7 +25,8 @@ class Model_jenisbarang extends CI_Model {
 		}
 
 		$this->db->select('*');
-		$this->db->from($this->table_jenisbarang);		
+		$this->db->from($this->table_jenisbarang);
+		$this->db->order_by('id_jenis','asc');		
 
 		$data = $this->db->get();
 		return $data->result();
